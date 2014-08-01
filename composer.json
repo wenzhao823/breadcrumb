@@ -1,5 +1,6 @@
 {
     "name": "wenzhao823/breadcrumb",
+    "type": "library",
     "description": "A special php solutions of breadcrumb implimentation.",
     "authors": [
         {
@@ -7,7 +8,12 @@
             "email": "wenzhao823@gmail.com"
         }
     ],
+    "version": "v0.0.1",
+    "license": "MIT",
     "require": {
 
+    },
+    "autoload": {
+        "classmap": ["src"]
     }
 }

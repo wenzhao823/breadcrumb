@@ -3,15 +3,23 @@ class BreadCrumb
 {
 	private $_crumb;
 
-	public function __construct($controller, $action)
-	{
-		$this->init();
+    private $_controller_postfix='';
+
+    private $_action_postfix='';
+
+	public function __construct($controller, $action, $options = '') {
+		$this->init($options);
 		$this->makeCrumb($controller, $action);
 	}
 
-	public function init()
-	{
+	public function init($options) {
 		$this->_crumb = array();
+        if(isset($options['controller_postfix'])) {
+            $this->_controller_postfix = $options['controller_postfix'];
+        }
+        if(isset($options['action_postfix'])) {
+            $this->_action_postfix = $options['action_postfix'];
+        }
 	}
 
     /**
@@ -20,7 +28,7 @@ class BreadCrumb
      * @param type $action
      */
     public function makeCrumb ($controller, $action) {
-        $method = new \ReflectionMethod($controller."Controller", $action.'Action');
+        $method = new \ReflectionMethod($controller.$this->_controller_postfix, $action.$this->_action_postfix);
         $result = $this->parseDocComment($method->getDocComment());
         
         if (empty($this->_crumb)) {
