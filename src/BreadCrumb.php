@@ -28,23 +28,27 @@ class BreadCrumb
      * @param type $action
      */
     public function makeCrumb ($controller, $action) {
-        $method = new \ReflectionMethod($controller.$this->_controller_postfix, $action.$this->_action_postfix);
-        $result = $this->parseDocComment($method->getDocComment());
-        
-        if (empty($this->_crumb)) {
-            $this->_crumb = array("{$controller}:{$action}:{$result['title']}");
-        } else {
-            $this->_crumb[] = "{$controller}:{$action}:{$result['title']}";
-        }
-        
-        if (isset($result['controller'])) {
+        try{
+            $method = new \ReflectionMethod($controller.$this->_controller_postfix, $action.$this->_action_postfix);
+            $result = $this->parseDocComment($method->getDocComment());
             
-            $this->makeCrumb($result['controller'], $result['action']);
+            if (empty($this->_crumb)) {
+                $this->_crumb = array("{$controller}:{$action}:{$result['title']}");
+            } else {
+                $this->_crumb[] = "{$controller}:{$action}:{$result['title']}";
+            }
             
-        } else {
+            if (isset($result['controller']) && ($result['controller'] != $controller || $result['action'] != $action)) {
+                
+                $this->makeCrumb($result['controller'], $result['action']);
+                
+            } else {
+                $this->_crumb[] = "::主面板";
+            }
+
+        }catch(Exception $e) {
             $this->_crumb[] = "::主面板";
         }
-
         return $this->_crumb;
     }
 
